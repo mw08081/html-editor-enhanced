@@ -52,13 +52,13 @@ class FontButtons extends Toolbar {
     if (bold) icons.add(Icon(Icons.format_bold));
     if (italic) icons.add(Icon(Icons.format_italic));
     if (underline) icons.add(Icon(Icons.format_underline));
+    if (strikethrough) icons.add(Icon(Icons.format_strikethrough));
     if (clearAll) icons.add(Icon(Icons.format_clear));
     return icons;
   }
 
   List<Icon> getIcons2() {
     var icons = <Icon>[];
-    if (strikethrough) icons.add(Icon(Icons.format_strikethrough));
     if (superscript) icons.add(Icon(Icons.superscript));
     if (subscript) icons.add(Icon(Icons.subscript));
     return icons;

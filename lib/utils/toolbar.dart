@@ -23,7 +23,7 @@ class FontSettingButtons extends Toolbar {
   const FontSettingButtons({
     this.fontName = true,
     this.fontSize = true,
-    this.fontSizeUnit = true,
+    this.fontSizeUnit = false,
   });
 }
 

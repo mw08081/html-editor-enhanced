@@ -43,8 +43,8 @@ class FontButtons extends Toolbar {
     this.underline = true,
     this.clearAll = true,
     this.strikethrough = true,
-    this.superscript = true,
-    this.subscript = true,
+    this.superscript = false,
+    this.subscript = false,
   });
 
   List<Icon> getIcons1() {

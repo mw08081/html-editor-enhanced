@@ -33,12 +33,12 @@ class ToolbarWidget extends StatefulWidget {
 /// Toolbar widget state
 class ToolbarWidgetState extends State<ToolbarWidget> {
   /// List that controls which [ToggleButtons] are selected for
-  /// bold/italic/underline/clear styles
-  List<bool> _fontSelected = List<bool>.filled(4, false);
+  /// bold/italic/underline/clear styles / strikthrough
+  List<bool> _fontSelected = List<bool>.filled(5, false);
 
   /// List that controls which [ToggleButtons] are selected for
-  /// strikthrough/superscript/subscript
-  List<bool> _miscFontSelected = List<bool>.filled(3, false);
+  ///   /superscript/subscript
+  List<bool> _miscFontSelected = List<bool>.filled(2, false);
 
   /// List that controls which [ToggleButtons] are selected for
   /// forecolor/backcolor
@@ -889,7 +889,11 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
         }
       }
       if (t is FontButtons) {
-        if (t.bold || t.italic || t.underline || t.clearAll) {
+        if (t.bold ||
+            t.italic ||
+            t.underline ||
+            t.clearAll ||
+            t.strikethrough) {
           toolbarChildren.add(ToggleButtons(
             constraints: BoxConstraints.tightFor(
               width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
@@ -954,12 +958,24 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                   widget.controller.execCommand('removeFormat');
                 }
               }
+              if (t.getIcons1()[index].icon == Icons.format_strikethrough) {
+                var proceed = await widget.htmlToolbarOptions.onButtonPressed
+                        ?.call(ButtonType.strikethrough, _fontSelected[index],
+                            updateStatus) ??
+                    true;
+                if (proceed) {
+                  widget.controller.execCommand('strikeThrough');
+                  updateStatus();
+                }
+              }
+
+              print(index);
             },
             isSelected: _fontSelected,
             children: t.getIcons1(),
           ));
         }
-        if (t.strikethrough || t.superscript || t.subscript) {
+        if (t.superscript || t.subscript) {
           toolbarChildren.add(ToggleButtons(
             constraints: BoxConstraints.tightFor(
               width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
@@ -986,16 +1002,6 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 });
               }
 
-              if (t.getIcons2()[index].icon == Icons.format_strikethrough) {
-                var proceed = await widget.htmlToolbarOptions.onButtonPressed
-                        ?.call(ButtonType.strikethrough,
-                            _miscFontSelected[index], updateStatus) ??
-                    true;
-                if (proceed) {
-                  widget.controller.execCommand('strikeThrough');
-                  updateStatus();
-                }
-              }
               if (t.getIcons2()[index].icon == Icons.superscript) {
                 var proceed = await widget.htmlToolbarOptions.onButtonPressed
                         ?.call(ButtonType.superscript, _miscFontSelected[index],

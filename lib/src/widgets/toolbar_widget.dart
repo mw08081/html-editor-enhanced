@@ -1049,6 +1049,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
           renderBorder: widget.htmlToolbarOptions.renderBorder,
           textStyle: widget.htmlToolbarOptions.textStyle,
           onPressed: (int index) async {
+            print('$index@@@@@@@@@@@@@@@@@@@@@@@@@@');
             void updateStatus(Color? color) {
               setState(mounted, this.setState, () {
                 _colorSelected[index] = !_colorSelected[index];
@@ -1063,6 +1064,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
               });
             }
 
+            print('1 ${_colorSelected[index]}');
             if (_colorSelected[index]) {
               if (t.getIcons()[index].icon == Icons.format_color_text) {
                 var proceed = await widget.htmlToolbarOptions.onButtonPressed
@@ -1107,6 +1109,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                         updateStatus) ??
                     true;
               }
+              print(proceed);
               if (proceed) {
                 late Color newColor;
                 if (t.getIcons()[index].icon == Icons.format_color_text) {
@@ -1155,33 +1158,6 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                               },
                               child: Text('Cancel'),
                             ),
-                            TextButton(
-                                onPressed: () {
-                                  if (t.getIcons()[index].icon ==
-                                      Icons.format_color_text) {
-                                    setState(mounted, this.setState, () {
-                                      _foreColorSelected = Colors.black;
-                                    });
-                                    widget.controller.execCommand(
-                                        'removeFormat',
-                                        argument: 'foreColor');
-                                    widget.controller.execCommand('foreColor',
-                                        argument: 'initial');
-                                  }
-                                  if (t.getIcons()[index].icon ==
-                                      Icons.format_color_fill) {
-                                    setState(mounted, this.setState, () {
-                                      _backColorSelected = Colors.yellow;
-                                    });
-                                    widget.controller.execCommand(
-                                        'removeFormat',
-                                        argument: 'hiliteColor');
-                                    widget.controller.execCommand('hiliteColor',
-                                        argument: 'initial');
-                                  }
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Reset to default color')),
                             TextButton(
                               onPressed: () {
                                 if (t.getIcons()[index].icon ==

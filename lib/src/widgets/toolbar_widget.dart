@@ -1120,7 +1120,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                               newColor = color;
                             },
                             title: Text('Choose a Color',
-                                style: Theme.of(context).textTheme.headlineSmall),
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
                             width: 40,
                             height: 40,
                             spacing: 0,

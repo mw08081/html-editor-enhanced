@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1069,307 +1068,164 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
         }
       }
       if (t is ColorButtons && (t.foregroundColor || t.highlightColor)) {
-        toolbarChildren.add(ToolbarCustomPopupBtn(
-          btnIcon: Icons.format_color_text,
-          body: Container(
-            width: 200,
-            height: 220,
-            padding: EdgeInsets.all(5.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 7, // 한 줄에 표시할 색상 수
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 4.0,
-                  ),
-                  itemCount: colors.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        late Color newColor = colors[index];
+        if (t.foregroundColor) {
+          toolbarChildren.add(ToolbarCustomPopupBtn(
+            btnIcon: Icons.format_color_text,
+            body: Container(
+              width: 200,
+              height: 220,
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 7, // 한 줄에 표시할 색상 수
+                      crossAxisSpacing: 4.0,
+                      mainAxisSpacing: 4.0,
+                    ),
+                    itemCount: colors.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          late Color newColor = colors[index];
 
-                        widget.controller.execCommand('foreColor',
-                            argument: (newColor.value & 0xFFFFFF)
-                                .toRadixString(16)
-                                .padLeft(6, '0')
-                                .toUpperCase());
-                        setState(mounted, this.setState, () {
-                          _foreColorSelected = newColor;
-                          Navigator.pop(context);
-                        });
-                      },
-                      child: Container(
-                        child: (_foreColorSelected == colors[index])
-                            ? (Icon(
-                                Icons.check,
-                                size: 17.5,
+                          widget.controller.execCommand('foreColor',
+                              argument: (newColor.value & 0xFFFFFF)
+                                  .toRadixString(16)
+                                  .padLeft(6, '0')
+                                  .toUpperCase());
+                          setState(mounted, this.setState, () {
+                            _foreColorSelected = newColor;
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Container(
+                          child: (_foreColorSelected == colors[index])
+                              ? (Icon(
+                                  Icons.check,
+                                  size: 17.5,
+                                  color: (colors[index] == Colors.white)
+                                      ? Colors.black
+                                      : Colors.white,
+                                ))
+                              : (null),
+                          decoration: BoxDecoration(
+                            border: Border.all(
                                 color: (colors[index] == Colors.white)
                                     ? Colors.black
-                                    : Colors.white,
-                              ))
-                            : (null),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: (colors[index] == Colors.white)
-                                  ? Colors.black
-                                  : colors[index], // Border color
-                              width: 0.5 // Border width
-                              ),
-                          shape: BoxShape.circle,
-                          color: colors[index],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: 5.0),
-                Divider(),
-                SizedBox(height: 5.0),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.color_lens),
-                            hintText: '#006DD7',
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none),
-                      ),
-                    ),
-                    TextButton(onPressed: () {}, child: Text('입력')),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ));
-
-        // toolbarChildren.add(ToolbarCustomPopupBtn(
-        //   btnIcon: Icons.format_color_text,
-        //   body: ElevatedButton(
-        //     onPressed: () {
-        //       debugPrint(_foreColorSelected.toString());
-        //       //_foreColorSelected = Colors.red;
-        //       late MaterialColor newColor = Colors.red;
-        //
-        //       if (t.getIcons()[0].icon == Icons.format_color_text) {
-        //         widget.controller.execCommand('foreColor',
-        //             argument: (newColor.value & 0xFFFFFF)
-        //                 .toRadixString(16)
-        //                 .padLeft(6, '0')
-        //                 .toUpperCase());
-        //         setState(mounted, this.setState, () {
-        //           _foreColorSelected = newColor;
-        //         });
-        //       }
-        //       debugPrint(_foreColorSelected.toString());
-        //     },
-        //     child: Text('Red'),
-        //   ),
-        // ));
-
-        toolbarChildren.add(ToggleButtons(
-          constraints: BoxConstraints.tightFor(
-            width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
-            height: widget.htmlToolbarOptions.toolbarItemHeight - 2,
-          ),
-          color: widget.htmlToolbarOptions.buttonColor,
-          selectedColor: widget.htmlToolbarOptions.buttonSelectedColor,
-          fillColor: widget.htmlToolbarOptions.buttonFillColor,
-          focusColor: widget.htmlToolbarOptions.buttonFocusColor,
-          highlightColor: widget.htmlToolbarOptions.buttonHighlightColor,
-          hoverColor: widget.htmlToolbarOptions.buttonHoverColor,
-          splashColor: widget.htmlToolbarOptions.buttonSplashColor,
-          selectedBorderColor:
-              widget.htmlToolbarOptions.buttonSelectedBorderColor,
-          borderColor: widget.htmlToolbarOptions.buttonBorderColor,
-          borderRadius: widget.htmlToolbarOptions.buttonBorderRadius,
-          borderWidth: widget.htmlToolbarOptions.buttonBorderWidth,
-          renderBorder: widget.htmlToolbarOptions.renderBorder,
-          textStyle: widget.htmlToolbarOptions.textStyle,
-          onPressed: (int index) async {
-            print('$index@@@@@@@@@@@@@@@@@@@@@@@@@@');
-            void updateStatus(Color? color) {
-              setState(mounted, this.setState, () {
-                _colorSelected[index] = !_colorSelected[index];
-                if (color != null &&
-                    t.getIcons()[index].icon == Icons.format_color_text) {
-                  _foreColorSelected = color;
-                }
-                if (color != null &&
-                    t.getIcons()[index].icon == Icons.format_color_fill) {
-                  _backColorSelected = color;
-                }
-              });
-            }
-
-            print('1 ${_colorSelected[index]}');
-            if (_colorSelected[index]) {
-              if (t.getIcons()[index].icon == Icons.format_color_text) {
-                var proceed = await widget.htmlToolbarOptions.onButtonPressed
-                        ?.call(ButtonType.foregroundColor,
-                            _colorSelected[index], updateStatus) ??
-                    true;
-                if (proceed) {
-                  widget.controller.execCommand('foreColor',
-                      argument: (Colors.black.value & 0xFFFFFF)
-                          .toRadixString(16)
-                          .padLeft(6, '0')
-                          .toUpperCase());
-                  updateStatus(null);
-                }
-              }
-              if (t.getIcons()[index].icon == Icons.format_color_fill) {
-                var proceed = await widget.htmlToolbarOptions.onButtonPressed
-                        ?.call(ButtonType.highlightColor, _colorSelected[index],
-                            updateStatus) ??
-                    true;
-                if (proceed) {
-                  widget.controller.execCommand('hiliteColor',
-                      argument: (Colors.yellow.value & 0xFFFFFF)
-                          .toRadixString(16)
-                          .padLeft(6, '0')
-                          .toUpperCase());
-                  updateStatus(null);
-                }
-              }
-            } else {
-              var proceed = true;
-              if (t.getIcons()[index].icon == Icons.format_color_text) {
-                proceed = await widget.htmlToolbarOptions.onButtonPressed?.call(
-                        ButtonType.foregroundColor,
-                        _colorSelected[index],
-                        updateStatus) ??
-                    true;
-              } else if (t.getIcons()[index].icon == Icons.format_color_fill) {
-                proceed = await widget.htmlToolbarOptions.onButtonPressed?.call(
-                        ButtonType.highlightColor,
-                        _colorSelected[index],
-                        updateStatus) ??
-                    true;
-              }
-              print(proceed);
-              if (proceed) {
-                late Color newColor;
-                if (t.getIcons()[index].icon == Icons.format_color_text) {
-                  newColor = _foreColorSelected;
-                } else {
-                  newColor = _backColorSelected;
-                }
-
-                await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return PointerInterceptor(
-                        child: AlertDialog(
-                          scrollable: true,
-                          content: ColorPicker(
-                            color: newColor,
-                            onColorChanged: (color) {
-                              newColor = color;
-                            },
-                            title: Text('Choose a Color',
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall),
-                            width: 40,
-                            height: 40,
-                            spacing: 0,
-                            runSpacing: 0,
-                            borderRadius: 0,
-                            wheelDiameter: 165,
-                            enableOpacity: false,
-                            showColorCode: true,
-                            colorCodeHasColor: true,
-                            pickersEnabled: <ColorPickerType, bool>{
-                              ColorPickerType.wheel: true,
-                            },
-                            copyPasteBehavior:
-                                const ColorPickerCopyPasteBehavior(
-                              parseShortHexCode: true,
-                            ),
-                            actionButtons: const ColorPickerActionButtons(
-                              dialogActionButtons: true,
-                            ),
+                                    : colors[index], // Border color
+                                width: 0.5 // Border width
+                                ),
+                            shape: BoxShape.circle,
+                            color: colors[index],
                           ),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  if (t.getIcons()[index].icon ==
-                                      Icons.format_color_text) {
-                                    setState(mounted, this.setState, () {
-                                      _foreColorSelected = Colors.black;
-                                    });
-                                    widget.controller.execCommand(
-                                        'removeFormat',
-                                        argument: 'foreColor');
-                                    widget.controller.execCommand('foreColor',
-                                        argument: 'initial');
-                                  }
-                                  if (t.getIcons()[index].icon ==
-                                      Icons.format_color_fill) {
-                                    setState(mounted, this.setState, () {
-                                      _backColorSelected = Colors.yellow;
-                                    });
-                                    widget.controller.execCommand(
-                                        'removeFormat',
-                                        argument: 'hiliteColor');
-                                    widget.controller.execCommand('hiliteColor',
-                                        argument: 'initial');
-                                  }
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('Reset to default color')),
-                            TextButton(
-                              onPressed: () {
-                                if (t.getIcons()[index].icon ==
-                                    Icons.format_color_text) {
-                                  widget.controller.execCommand('foreColor',
-                                      argument: (newColor.value & 0xFFFFFF)
-                                          .toRadixString(16)
-                                          .padLeft(6, '0')
-                                          .toUpperCase());
-                                  setState(mounted, this.setState, () {
-                                    _foreColorSelected = newColor;
-                                  });
-                                }
-                                if (t.getIcons()[index].icon ==
-                                    Icons.format_color_fill) {
-                                  widget.controller.execCommand('hiliteColor',
-                                      argument: (newColor.value & 0xFFFFFF)
-                                          .toRadixString(16)
-                                          .padLeft(6, '0')
-                                          .toUpperCase());
-                                  setState(mounted, this.setState, () {
-                                    _backColorSelected = newColor;
-                                  });
-                                }
-                                setState(mounted, this.setState, () {
-                                  _colorSelected[index] =
-                                      !_colorSelected[index];
-                                });
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('Set color'),
-                            )
-                          ],
                         ),
                       );
-                    });
-              }
-            }
-          },
-          isSelected: _colorSelected,
-          children: t.getIcons(),
-        ));
+                    },
+                  ),
+                  SizedBox(height: 5.0),
+                  Divider(),
+                  SizedBox(height: 5.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.color_lens),
+                              hintText: '#006DD7',
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none),
+                        ),
+                      ),
+                      TextButton(onPressed: () {}, child: Text('입력')),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ));
+        }
+        if (t.highlightColor) {
+          toolbarChildren.add(ToolbarCustomPopupBtn(
+            btnIcon: Icons.format_color_fill,
+            body: Container(
+              width: 200,
+              height: 220,
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 7, // 한 줄에 표시할 색상 수
+                      crossAxisSpacing: 4.0,
+                      mainAxisSpacing: 4.0,
+                    ),
+                    itemCount: colors.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          late Color newColor = colors[index];
+
+                          widget.controller.execCommand('hiliteColor',
+                              argument: (newColor.value & 0xFFFFFF)
+                                  .toRadixString(16)
+                                  .padLeft(6, '0')
+                                  .toUpperCase());
+                          setState(mounted, this.setState, () {
+                            _backColorSelected = newColor;
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Container(
+                          child: (_backColorSelected == colors[index])
+                              ? (Icon(
+                                  Icons.check,
+                                  size: 17.5,
+                                  color: (colors[index] == Colors.white)
+                                      ? Colors.black
+                                      : Colors.white,
+                                ))
+                              : (null),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: (colors[index] == Colors.white)
+                                    ? Colors.black
+                                    : colors[index], // Border color
+                                width: 0.5 // Border width
+                                ),
+                            shape: BoxShape.circle,
+                            color: colors[index],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 5.0),
+                  Divider(),
+                  SizedBox(height: 5.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.color_lens),
+                              hintText: '#006DD7',
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none),
+                        ),
+                      ),
+                      TextButton(onPressed: () {}, child: Text('입력')),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ));
+        }
       }
       if (t is ListButtons) {
         if (t.ul || t.ol) {

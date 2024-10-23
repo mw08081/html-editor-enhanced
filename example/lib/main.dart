@@ -71,6 +71,7 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
                 htmlEditorOptions: HtmlEditorOptions(
                   hint: 'Your text here...',
                   shouldEnsureVisible: true,
+                  darkMode: false,
                   //initialText: "<p>text content initial, if any</p>",
                 ),
                 htmlToolbarOptions: HtmlToolbarOptions(

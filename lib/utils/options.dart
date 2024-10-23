@@ -13,7 +13,7 @@ class HtmlEditorOptions {
     this.adjustHeightForKeyboard = true,
     this.characterLimit,
     this.customOptions = '',
-    this.darkMode,
+    this.darkMode = false,
     this.disabled = false,
     this.filePath,
     this.hint,
@@ -67,7 +67,7 @@ class HtmlEditorOptions {
   /// always light, `true` - always dark.
   ///
   /// The default value is null (switches with system).
-  final bool? darkMode;
+  final bool darkMode;
 
   /// Disable the editor immediately after startup. You can re-enable the editor
   /// by calling [controller.enable()].

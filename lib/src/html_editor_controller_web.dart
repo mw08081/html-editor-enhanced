@@ -219,7 +219,6 @@ class HtmlEditorController extends unsupported.HtmlEditorController {
   /// A function to quickly call a document.execCommand function in a readable format
   @override
   void execCommand(String command, {String? argument}) {
-    print('helllllll');
     _evaluateJavascriptWeb(data: {
       'type': 'toIframe: execCommand',
       'command': command,

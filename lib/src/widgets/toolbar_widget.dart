@@ -5,10 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
-import 'package:html_editor_enhanced/src/widgets/toolbar_custom_popup_btn.dart';
+import 'package:html_editor_enhanced/src/widgets/my_widget/popup_button.dart';
 import 'package:html_editor_enhanced/utils/utils.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
+
+import 'my_widget/custom_widget_wrapper.dart';
 
 /// Toolbar widget class
 class ToolbarWidget extends StatefulWidget {
@@ -76,7 +78,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
   /// Sets the selected item for the foreground color dialog
   Color _foreColorSelected = Colors.black;
 
-  /// sets the colors that can be chosen
+  /// colors that can be chosen
   List<Color> colors = [
     Color(0xFF000000), // #000000
     Color(0xFF1C1C1C), // #1C1C1C
@@ -1068,10 +1070,23 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
         }
       }
       if (t is ColorButtons && (t.foregroundColor || t.highlightColor)) {
+        // 팝업 버튼에 스타일을 적용하고,
+        // 두 버튼을 custom wrap로 감싸서 List[widget, widet] -> Widget
+        // 리턴하여 추가해보쟈..
+
+        toolbarChildren.add(
+          CustomWidgetWrapper(
+            widgets: [
+              Text('1'),
+              Text('2'),
+            ],
+          ),
+        );
+
         if (t.foregroundColor) {
-          toolbarChildren.add(ToolbarCustomPopupBtn(
-            btnIcon: Icons.format_color_text,
-            body: Container(
+          toolbarChildren.add(PopupButton(
+            childIcon: Icons.format_color_text,
+            content: Container(
               width: 200,
               height: 220,
               padding: EdgeInsets.all(5.0),
@@ -1148,11 +1163,11 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
           ));
         }
         if (t.highlightColor) {
-          toolbarChildren.add(ToolbarCustomPopupBtn(
-            btnIcon: Icons.format_color_fill,
-            body: Container(
+          toolbarChildren.add(PopupButton(
+            childIcon: Icons.format_color_fill,
+            content: Container(
               width: 200,
-              height: 220,
+              height: 20,
               padding: EdgeInsets.all(5.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

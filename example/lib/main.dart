@@ -75,7 +75,6 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
                   //initialText: "<p>text content initial, if any</p>",
                 ),
                 htmlToolbarOptions: HtmlToolbarOptions(
-                  renderBorder: true,
                   toolbarPosition: ToolbarPosition.aboveEditor, //by default
                   toolbarType: ToolbarType.nativeScrollable, //by default
                   onButtonPressed:

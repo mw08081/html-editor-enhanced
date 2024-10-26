@@ -393,13 +393,13 @@ class HtmlToolbarOptions {
   /// Styling options that only apply to the buttons:
   /// (See the [ToggleButtons] class for more information)
 
-  final Color? buttonColor;
-  final Color? buttonSelectedColor;
-  final Color? buttonFillColor;
+  final Color? buttonColor; // 아이콘
+  final Color? buttonSelectedColor; // 선택시 아이콘
+  final Color? buttonFillColor; // 선택시 영역
   final Color? buttonFocusColor;
-  final Color? buttonHighlightColor;
-  final Color? buttonHoverColor;
-  final Color? buttonSplashColor;
+  final Color? buttonHighlightColor; // splash 에 뭍힘, 숏 클릭
+  final Color? buttonHoverColor; // 호버
+  final Color? buttonSplashColor; // 롱탭
   final Color? buttonBorderColor;
   final Color? buttonSelectedBorderColor;
   final BorderRadius? buttonBorderRadius;

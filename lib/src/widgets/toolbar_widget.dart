@@ -1160,6 +1160,10 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 ],
               ),
             ),
+            constraints: BoxConstraints.tightFor(
+              width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
+              height: widget.htmlToolbarOptions.toolbarItemHeight - 2,
+            ),
           ));
         }
         if (t.highlightColor) {
@@ -1238,6 +1242,10 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                   ),
                 ],
               ),
+            ),
+            constraints: BoxConstraints.tightFor(
+              width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
+              height: widget.htmlToolbarOptions.toolbarItemHeight - 2,
             ),
           ));
         }

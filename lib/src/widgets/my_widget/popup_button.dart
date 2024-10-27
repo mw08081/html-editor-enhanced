@@ -47,6 +47,7 @@ class _PopupButtonState extends State<PopupButton> {
         cursor: SystemMouseCursors.click,
         onHover: (PointerHoverEvent pe) => setState(() {
           isHover = !isHover;
+          print(isHover);
         }),
         child: CustomPopup(
           content: PointerInterceptor(child: widget.content),

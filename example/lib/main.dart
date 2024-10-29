@@ -5,6 +5,8 @@ import 'package:html_editor_enhanced/html_editor.dart';
 
 void main() => runApp(HtmlEditorExampleApp());
 
+//flutter run -d chrome --web-port=8081 --web-renderer html
+
 class HtmlEditorExampleApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -151,9 +153,9 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
                 }, onKeyUp: (int? keyCode) {
                   print('$keyCode key released');
                 }, onMouseDown: () {
-                  print('mouse downed');
+                  //print('mouse downed');
                 }, onMouseUp: () {
-                  print('mouse released');
+                  //print('mouse released');
                 }, onNavigationRequestMobile: (String url) {
                   print(url);
                   return NavigationActionPolicy.ALLOW;

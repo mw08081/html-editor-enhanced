@@ -513,6 +513,9 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
   }
 
   List<Widget> _buildChildren() {
+    TextEditingController foreColorHexController = TextEditingController();
+    TextEditingController backColorHexController = TextEditingController();
+
     var toolbarChildren = <Widget>[];
     for (var t in widget.htmlToolbarOptions.defaultToolbarButtons) {
       if (t is StyleButtons && t.style) {
@@ -1079,10 +1082,11 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
           CustomWidgetWrapper(
             widgets: [
               PopupButton(
+                fillColor: _foreColorSelected,
                 childIcon: Icons.format_color_text,
                 content: Container(
                   width: 200,
-                  height: 220,
+                  height: 320,
                   padding: EdgeInsets.all(5.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -1142,14 +1146,45 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: foreColorHexController,
                               decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.color_lens),
-                                  hintText: '#006DD7',
+                                  prefixIcon: Icon(Icons.colorize_sharp),
+                                  hintText: '#ffffff',
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none),
                             ),
                           ),
-                          TextButton(onPressed: () {}, child: Text('입력')),
+                          TextButton(
+                              onPressed: () {
+                                try {
+                                  if (foreColorHexController.text.length != 7)
+                                    throw ('should input format like #ffeeff');
+
+                                  Color newColor =
+                                      foreColorHexController.text.toColor;
+
+                                  if (foreColorHexController.text !=
+                                          "#000000" &&
+                                      newColor == Colors.black) {
+                                    throw ('should input HEX Value like #ffeeff');
+                                  }
+
+                                  debugPrint(newColor.toString());
+
+                                  widget.controller.execCommand('foreColor',
+                                      argument: (newColor.value & 0xFFFFFF)
+                                          .toRadixString(16)
+                                          .padLeft(6, '0')
+                                          .toUpperCase());
+                                  setState(mounted, this.setState, () {
+                                    _foreColorSelected = newColor;
+                                    Navigator.pop(context);
+                                  });
+                                } catch (err) {
+                                  debugPrint(err.toString());
+                                }
+                              },
+                              child: Text('입력')),
                         ],
                       ),
                     ],
@@ -1159,7 +1194,6 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                   width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
                   height: widget.htmlToolbarOptions.toolbarItemHeight - 2,
                 ),
-                fillColor: Colors.red,
               ),
               PopupButton(
                 childIcon: Icons.format_color_fill,

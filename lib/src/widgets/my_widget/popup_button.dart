@@ -39,7 +39,6 @@ class _PopupButtonState extends State<PopupButton> {
 
     hoverColor = widget.hoverColor ?? Colors.white.withOpacity(0.04);
     fillColor = widget.fillColor ?? Colors.white.withOpacity(0.16);
-    print(fillColor.toString());
     iconColor = widget.iconColor ?? Colors.white;
   }
 
@@ -47,7 +46,7 @@ class _PopupButtonState extends State<PopupButton> {
   Widget build(BuildContext context) {
     return Container(
       constraints: widget.constraints,
-      color: (isHover) ? (hoverColor) : (null),
+      color: (isHover) ? (hoverColor) : (fillColor),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         onEnter: (PointerEnterEvent pe) => setState(() {

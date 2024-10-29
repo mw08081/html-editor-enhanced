@@ -1082,11 +1082,10 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
           CustomWidgetWrapper(
             widgets: [
               PopupButton(
-                fillColor: _foreColorSelected,
                 childIcon: Icons.format_color_text,
                 content: Container(
                   width: 200,
-                  height: 320,
+                  height: 220,
                   padding: EdgeInsets.all(5.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

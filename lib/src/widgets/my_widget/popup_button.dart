@@ -29,16 +29,16 @@ class PopupButton extends StatefulWidget {
 class _PopupButtonState extends State<PopupButton> {
   bool isHover = false;
 
-  late Color hoverColor;
-  late Color fillColor;
-  late Color iconColor;
+  late Color? hoverColor;
+  late Color? fillColor;
+  late Color? iconColor;
 
   @override
   void initState() {
     super.initState();
 
     hoverColor = widget.hoverColor ?? Colors.white.withOpacity(0.04);
-    fillColor = widget.fillColor ?? Colors.white.withOpacity(0.16);
+    fillColor = (widget.fillColor != null) ? (widget.fillColor!) : (null);
     iconColor = widget.iconColor ?? Colors.white;
   }
 

@@ -1195,84 +1195,13 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                   height: widget.htmlToolbarOptions.toolbarItemHeight - 2,
                 ),
               ),
-
-
               PopupButton(
                 childIcon: Icons.format_color_fill,
                 content: Container(
-                  width: 200,
-                  height: 220,
-                  padding: EdgeInsets.all(5.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 7, // 한 줄에 표시할 색상 수
-                          crossAxisSpacing: 4.0,
-                          mainAxisSpacing: 4.0,
-                        ),
-                        itemCount: colors.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              late Color newColor = colors[index];
-
-                              widget.controller.execCommand('hiliteColor',
-                                  argument: (newColor.value & 0xFFFFFF)
-                                      .toRadixString(16)
-                                      .padLeft(6, '0')
-                                      .toUpperCase());
-                              setState(mounted, this.setState, () {
-                                _backColorSelected = newColor;
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Container(
-                              child: (_backColorSelected == colors[index])
-                                  ? (Icon(
-                                      Icons.check,
-                                      size: 17.5,
-                                      color: (colors[index] == Colors.white)
-                                          ? Colors.black
-                                          : Colors.white,
-                                    ))
-                                  : (null),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: (colors[index] == Colors.white)
-                                        ? Colors.black
-                                        : colors[index], // Border color
-                                    width: 0.5 // Border width
-                                    ),
-                                shape: BoxShape.circle,
-                                color: colors[index],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 5.0),
-                      Divider(),
-                      SizedBox(height: 5.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.color_lens),
-                                  hintText: '#006DD7',
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none),
-                            ),
-                          ),
-                          TextButton(onPressed: () {}, child: Text('입력')),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                    width: 200,
+                    height: 220,
+                    padding: EdgeInsets.all(5.0),
+                    child: Text('hello')),
                 constraints: BoxConstraints.tightFor(
                   width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
                   height: widget.htmlToolbarOptions.toolbarItemHeight - 2,

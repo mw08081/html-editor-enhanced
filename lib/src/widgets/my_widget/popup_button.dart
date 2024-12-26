@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_popup/flutter_popup.dart';
 import 'package:info_popup/info_popup.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
@@ -51,32 +52,22 @@ class _PopupButtonState extends State<PopupButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: widget.constraints,
-      color: (isHover) ? (hoverColor) : (fillColor),
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (PointerEnterEvent pe) => setState(() {
-          isHover = true;
-        }),
-        onExit: (PointerExitEvent pe) => setState(() {
-          isHover = false;
-        }),
-        child: InfoPopupWidget(
-          child: Icon(widget.childIcon),
-          customContent: () => PointerInterceptor(child: widget.content),
-          infoPopupDismissed: () {
-            debugPrint('dismiss');
-          },
-
-          // areaBackgroundColor: Colors.white,
-          // onControllerCreated: (controller) {
-          //   _controller = controller;
-          // },
-
-          // child: PointerInterceptor(child: widget.content),
-        ),
-      ),
-    );
+        constraints: widget.constraints,
+        color: (isHover) ? (hoverColor) : (fillColor),
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          onEnter: (PointerEnterEvent pe) => setState(() {
+            isHover = true;
+          }),
+          onExit: (PointerExitEvent pe) => setState(() {
+            isHover = false;
+          }),
+          child: CustomPopup(
+            anchorKey: GlobalKey(),
+            content: PointerInterceptor(child: widget.content),
+            child: Icon(widget.childIcon),
+          ),
+        ));
     // child: CustomPopup(
     //   anchorKey: GlobalKey(),
     //   content: PointerInterceptor(child: widget.content),

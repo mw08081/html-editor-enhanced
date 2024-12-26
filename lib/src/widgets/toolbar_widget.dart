@@ -71,7 +71,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
   double _fontSizeSelectedItem = 3;
 
   /// Keeps track of the current font size in px
-  double _actualFontSizeSelectedItem = 16;
+  double _actualFontSizeSelectedItem = 12;
 
   /// Sets the selected item for the font units dropdown
   String _fontSizeUnitSelectedItem = 'pt';
@@ -516,14 +516,16 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
   // 앞에 0 3개는 사용 안함 (index 정리) +++ font size is only int!!!!!
   final TextStyle trailingTextStyle =
       TextStyle(fontSize: 15, color: Colors.black);
-  List<int> _fontSizeList = [0, 0, 0, 3, 4, 5, 6, 7];
-  List<int> _actualFontSizeList = [0, 0, 0, 12, 14, 17, 24, 36];
+  List<int> _actualFontSizeList = [0, 0, 0, 12, 14, 18, 24, 36];
   void _setFontSize(int fontSize) {
     setState(mounted, this.setState, () {
+      // js
       widget.controller.execCommand('fontSize', argument: fontSize.toString());
 
+      // editor
       _actualFontSizeSelectedItem = _actualFontSizeList[fontSize] as double;
 
+      // pop
       Navigator.pop(context);
     });
   }
@@ -668,13 +670,19 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
       if (t is FontSettingButtons) {
         toolbarChildren.add(CustomWidgetWrapper(widgets: [
           const SizedBox(width: 30),
-          if (t.fontName == true) Text('fontName 🔽'),
+          if (t.fontName == true) Text('fontName ▼'),
           if (t.fontSize == true)
             PopupButton(
               contentPadding: EdgeInsets.zero,
               child: Align(
                 alignment: Alignment.center,
-                child: Text('$_actualFontSizeSelectedItem px'),
+                child: Row(
+                  children: [
+                    Text(
+                        '$_actualFontSizeSelectedItem $_fontSizeUnitSelectedItem    '),
+                    Text('▼', style: TextStyle(fontSize: 12))
+                  ],
+                ),
               ),
               content: Container(
                 width: 200,
@@ -687,37 +695,37 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                         title: Text('가나다',
                             style:
                                 TextStyle(fontSize: 36, color: Colors.black)),
-                        trailing: Text('36 px', style: trailingTextStyle),
+                        trailing: Text('36 pt', style: trailingTextStyle),
                         onTap: () => _setFontSize(7)),
                     ListTile(
                       title: Text('가나다',
                           style: TextStyle(fontSize: 24, color: Colors.black)),
-                      trailing: Text('24 px', style: trailingTextStyle),
+                      trailing: Text('24 pt', style: trailingTextStyle),
                       onTap: () => _setFontSize(6),
                     ),
                     ListTile(
                       title: Text('가나다',
                           style: TextStyle(fontSize: 18, color: Colors.black)),
-                      trailing: Text('18 px', style: trailingTextStyle),
+                      trailing: Text('18 pt', style: trailingTextStyle),
                       onTap: () => _setFontSize(5),
                     ),
                     ListTile(
                       title: Text('가나다',
                           style: TextStyle(fontSize: 14, color: Colors.black)),
-                      trailing: Text('14 px', style: trailingTextStyle),
+                      trailing: Text('14 pt', style: trailingTextStyle),
                       onTap: () => _setFontSize(4),
                     ),
                     ListTile(
                       title: Text('가나다',
                           style: TextStyle(fontSize: 12, color: Colors.black)),
-                      trailing: Text('12 px', style: trailingTextStyle),
+                      trailing: Text('12 pt', style: trailingTextStyle),
                       onTap: () => _setFontSize(3),
                     ),
                   ],
                 ),
               ),
               constraints: BoxConstraints.tightFor(
-                width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
+                width: 70,
                 height: widget.htmlToolbarOptions.toolbarItemHeight - 2,
               ),
             ),

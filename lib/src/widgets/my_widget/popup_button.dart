@@ -1,23 +1,24 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_popup/flutter_popup.dart';
-import 'package:info_popup/info_popup.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class PopupButton extends StatefulWidget {
   final BoxConstraints constraints;
+  final EdgeInsets contentPadding;
   final Color? iconColor;
   final Color? hoverColor;
   final Color? fillColor;
 
   final Widget content;
-  final IconData childIcon;
+  final Widget child;
 
   const PopupButton({
     super.key,
     required this.constraints,
+    this.contentPadding = const EdgeInsets.all(10),
     required this.content,
-    required this.childIcon,
+    required this.child,
     this.hoverColor,
     this.fillColor,
     this.iconColor,
@@ -28,7 +29,6 @@ class PopupButton extends StatefulWidget {
 }
 
 class _PopupButtonState extends State<PopupButton> {
-  late final InfoPopupController _controller;
   bool isHover = false;
 
   late Color? hoverColor;
@@ -63,9 +63,10 @@ class _PopupButtonState extends State<PopupButton> {
             isHover = false;
           }),
           child: CustomPopup(
-            anchorKey: GlobalKey(),
+            // anchorKey: GlobalKey(),
+            contentPadding: widget.contentPadding,
             content: PointerInterceptor(child: widget.content),
-            child: Icon(widget.childIcon),
+            child: widget.child,
           ),
         ));
     // child: CustomPopup(

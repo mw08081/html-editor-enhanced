@@ -513,6 +513,21 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
     return Container(height: 0, width: 0);
   }
 
+  // 앞에 0 3개는 사용 안함 (index 정리) +++ font size is only int!!!!!
+  final TextStyle trailingTextStyle =
+      TextStyle(fontSize: 15, color: Colors.black);
+  List<int> _fontSizeList = [0, 0, 0, 3, 4, 5, 6, 7];
+  List<int> _actualFontSizeList = [0, 0, 0, 12, 14, 17, 24, 36];
+  void _setFontSize(int fontSize) {
+    setState(mounted, this.setState, () {
+      widget.controller.execCommand('fontSize', argument: fontSize.toString());
+
+      _actualFontSizeSelectedItem = _actualFontSizeList[fontSize] as double;
+
+      Navigator.pop(context);
+    });
+  }
+
   List<Widget> _buildChildren() {
     TextEditingController foreColorHexController = TextEditingController();
     TextEditingController backColorHexController = TextEditingController();
@@ -651,218 +666,62 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
         ));
       }
       if (t is FontSettingButtons) {
-        if (t.fontName) {
-          toolbarChildren.add(Container(
-            padding: const EdgeInsets.only(left: 8.0),
-            height: widget.htmlToolbarOptions.toolbarItemHeight,
-            decoration: !widget.htmlToolbarOptions.renderBorder
-                ? null
-                : widget.htmlToolbarOptions.dropdownBoxDecoration ??
-                    BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<String>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
-                style: widget.htmlToolbarOptions.textStyle,
-                items: [
-                  CustomDropdownMenuItem(
-                    value: 'Courier New',
-                    child: PointerInterceptor(
-                        child: Text('Courier New',
-                            style: TextStyle(fontFamily: 'Courier'))),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 'sans-serif',
-                    child: PointerInterceptor(
-                        child: Text('Sans Serif',
-                            style: TextStyle(fontFamily: 'sans-serif'))),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 'Times New Roman',
-                    child: PointerInterceptor(
-                        child: Text('Times New Roman',
-                            style: TextStyle(fontFamily: 'Times'))),
-                  ),
-                ],
-                value: _fontNameSelectedItem,
-                onChanged: (String? changed) async {
-                  void updateSelectedItem(dynamic changed) async {
-                    if (changed is String) {
-                      setState(mounted, this.setState, () {
-                        _fontNameSelectedItem = changed;
-                      });
-                    }
-                  }
-
-                  if (changed != null) {
-                    var proceed =
-                        await widget.htmlToolbarOptions.onDropdownChanged?.call(
-                                DropdownType.fontName,
-                                changed,
-                                updateSelectedItem) ??
-                            true;
-                    if (proceed) {
-                      widget.controller
-                          .execCommand('fontName', argument: changed);
-                      updateSelectedItem(changed);
-                    }
-                  }
-                },
+        toolbarChildren.add(CustomWidgetWrapper(widgets: [
+          const SizedBox(width: 30),
+          if (t.fontName == true) Text('fontName 🔽'),
+          if (t.fontSize == true)
+            PopupButton(
+              contentPadding: EdgeInsets.zero,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text('$_actualFontSizeSelectedItem px'),
+              ),
+              content: Container(
+                width: 200,
+                height: 280,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                        titleAlignment: ListTileTitleAlignment.center,
+                        title: Text('가나다',
+                            style:
+                                TextStyle(fontSize: 36, color: Colors.black)),
+                        trailing: Text('36 px', style: trailingTextStyle),
+                        onTap: () => _setFontSize(7)),
+                    ListTile(
+                      title: Text('가나다',
+                          style: TextStyle(fontSize: 24, color: Colors.black)),
+                      trailing: Text('24 px', style: trailingTextStyle),
+                      onTap: () => _setFontSize(6),
+                    ),
+                    ListTile(
+                      title: Text('가나다',
+                          style: TextStyle(fontSize: 18, color: Colors.black)),
+                      trailing: Text('18 px', style: trailingTextStyle),
+                      onTap: () => _setFontSize(5),
+                    ),
+                    ListTile(
+                      title: Text('가나다',
+                          style: TextStyle(fontSize: 14, color: Colors.black)),
+                      trailing: Text('14 px', style: trailingTextStyle),
+                      onTap: () => _setFontSize(4),
+                    ),
+                    ListTile(
+                      title: Text('가나다',
+                          style: TextStyle(fontSize: 12, color: Colors.black)),
+                      trailing: Text('12 px', style: trailingTextStyle),
+                      onTap: () => _setFontSize(3),
+                    ),
+                  ],
+                ),
+              ),
+              constraints: BoxConstraints.tightFor(
+                width: widget.htmlToolbarOptions.toolbarItemHeight - 2,
+                height: widget.htmlToolbarOptions.toolbarItemHeight - 2,
               ),
             ),
-          ));
-        }
-        if (t.fontSize) {
-          toolbarChildren.add(Container(
-            padding: const EdgeInsets.only(left: 8.0),
-            height: widget.htmlToolbarOptions.toolbarItemHeight,
-            decoration: !widget.htmlToolbarOptions.renderBorder
-                ? null
-                : widget.htmlToolbarOptions.dropdownBoxDecoration ??
-                    BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<double>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
-                style: widget.htmlToolbarOptions.textStyle,
-                items: [
-                  CustomDropdownMenuItem(
-                    value: 1,
-                    child: PointerInterceptor(
-                        child: Text(
-                            "${_fontSizeUnitSelectedItem == "px" ? "11" : "8"} $_fontSizeUnitSelectedItem")),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 2,
-                    child: PointerInterceptor(
-                        child: Text(
-                            "${_fontSizeUnitSelectedItem == "px" ? "13" : "10"} $_fontSizeUnitSelectedItem")),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 3,
-                    child: PointerInterceptor(
-                        child: Text(
-                            "${_fontSizeUnitSelectedItem == "px" ? "16" : "12"} $_fontSizeUnitSelectedItem")),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 4,
-                    child: PointerInterceptor(
-                        child: Text(
-                            "${_fontSizeUnitSelectedItem == "px" ? "19" : "14"} $_fontSizeUnitSelectedItem")),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 5,
-                    child: PointerInterceptor(
-                        child: Text(
-                            "${_fontSizeUnitSelectedItem == "px" ? "24" : "18"} $_fontSizeUnitSelectedItem")),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 6,
-                    child: PointerInterceptor(
-                        child: Text(
-                            "${_fontSizeUnitSelectedItem == "px" ? "32" : "24"} $_fontSizeUnitSelectedItem")),
-                  ),
-                  CustomDropdownMenuItem(
-                    value: 7,
-                    child: PointerInterceptor(
-                        child: Text(
-                            "${_fontSizeUnitSelectedItem == "px" ? "48" : "36"} $_fontSizeUnitSelectedItem")),
-                  ),
-                ],
-                value: _fontSizeSelectedItem,
-                onChanged: (double? changed) async {
-                  void updateSelectedItem(dynamic changed) {
-                    if (changed is double) {
-                      setState(mounted, this.setState, () {
-                        _fontSizeSelectedItem = changed;
-                      });
-                    }
-                  }
-
-                  if (changed != null) {
-                    var intChanged = changed.toInt();
-                    var proceed =
-                        await widget.htmlToolbarOptions.onDropdownChanged?.call(
-                                DropdownType.fontSize,
-                                changed,
-                                updateSelectedItem) ??
-                            true;
-                    if (proceed) {
-                      switch (intChanged) {
-                        case 1:
-                          _actualFontSizeSelectedItem = 11;
-                          break;
-                        case 2:
-                          _actualFontSizeSelectedItem = 13;
-                          break;
-                        case 3:
-                          _actualFontSizeSelectedItem = 16;
-                          break;
-                        case 4:
-                          _actualFontSizeSelectedItem = 19;
-                          break;
-                        case 5:
-                          _actualFontSizeSelectedItem = 24;
-                          break;
-                        case 6:
-                          _actualFontSizeSelectedItem = 32;
-                          break;
-                        case 7:
-                          _actualFontSizeSelectedItem = 48;
-                          break;
-                      }
-                      widget.controller.execCommand('fontSize',
-                          argument: changed.toString());
-                      updateSelectedItem(changed);
-                    }
-                  }
-                },
-              ),
-            ),
-          ));
-        }
+        ]));
         if (t.fontSizeUnit) {
           toolbarChildren.add(Container(
             padding: const EdgeInsets.only(left: 8.0),
@@ -1083,7 +942,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
           CustomWidgetWrapper(
             widgets: [
               PopupButton(
-                childIcon: Icons.format_color_text,
+                child: Icon(Icons.format_color_text),
                 content: Container(
                   width: 200,
                   height: 220,
@@ -1196,7 +1055,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 ),
               ),
               PopupButton(
-                childIcon: Icons.format_color_fill,
+                child: Icon(Icons.format_color_fill),
                 content: Container(
                   color: Colors.white,
                   width: 200,

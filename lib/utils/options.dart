@@ -145,7 +145,8 @@ class HtmlToolbarOptions {
           textDirection: false,
           lineHeight: false,
           caseConverter: false),
-      InsertButtons(audio: false, otherFile: false),
+      InsertButtons(
+          audio: false, picture: false, video: false, otherFile: false),
     ],
     this.otherFileExtensions,
     this.imageExtensions,

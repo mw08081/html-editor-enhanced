@@ -121,16 +121,7 @@ color: #555;">
                 ),
                 htmlToolbarOptions: HtmlToolbarOptions(
                   toolbarPosition: ToolbarPosition.aboveEditor, //by default
-                  toolbarType: ToolbarType.nativeGrid, //by default
-                  defaultToolbarButtons: [
-                    FontSettingButtons(fontSizeUnit: false),
-                    FontButtons(superscript: false, subscript: false),
-                    StyleButtons(),
-                    ColorButtons(),
-                    // ParagraphButtons(),
-                    // OtherButtons(),
-                    // InsertButtons(otherFile: true)
-                  ],
+                  toolbarType: ToolbarType.nativeScrollable, //by default
                   onButtonPressed:
                       (ButtonType type, bool? status, Function? updateStatus) {
                     print(

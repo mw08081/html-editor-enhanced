@@ -136,8 +136,8 @@ class HtmlToolbarOptions {
       // StyleButtons(),
       FontSettingButtons(fontName: false, fontSizeUnit: false),
       FontButtons(clearAll: false),
-      // ColorButtons(),
-      //ListButtons(ul: false, listStyles: false),
+      ColorButtons(),
+      //ListButtons(ußl: false, listStyles: false),
       ParagraphButtons(
           increaseIndent: false,
           decreaseIndent: false,

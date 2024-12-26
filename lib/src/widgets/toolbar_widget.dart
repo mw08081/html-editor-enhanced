@@ -398,6 +398,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
           child: Opacity(
             opacity: _enabled ? 1 : 0.5,
             child: Container(
+              color: Colors.grey.shade100,
               height: widget.htmlToolbarOptions.toolbarItemHeight + 15,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),

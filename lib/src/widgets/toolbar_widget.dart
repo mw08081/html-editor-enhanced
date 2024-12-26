@@ -1198,6 +1198,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
               PopupButton(
                 childIcon: Icons.format_color_fill,
                 content: Container(
+                  color: Colors.white,
                   width: 200,
                   height: 220,
                   padding: EdgeInsets.all(5.0),

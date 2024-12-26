@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_popup/flutter_popup.dart';
+import 'package:info_popup/info_popup.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class PopupButton extends StatefulWidget {
@@ -27,6 +27,7 @@ class PopupButton extends StatefulWidget {
 }
 
 class _PopupButtonState extends State<PopupButton> {
+  late final InfoPopupController _controller;
   bool isHover = false;
 
   late Color? hoverColor;
@@ -43,6 +44,11 @@ class _PopupButtonState extends State<PopupButton> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       constraints: widget.constraints,
@@ -55,11 +61,25 @@ class _PopupButtonState extends State<PopupButton> {
         onExit: (PointerExitEvent pe) => setState(() {
           isHover = false;
         }),
-        child: CustomPopup(
-          content: PointerInterceptor(child: widget.content),
+        child: InfoPopupWidget(
           child: Icon(widget.childIcon),
+          customContent: () => PointerInterceptor(child: widget.content),
+          infoPopupDismissed: () {
+            debugPrint('dismiss');
+          },
+
+          // areaBackgroundColor: Colors.white,
+          // onControllerCreated: (controller) {
+          //   _controller = controller;
+          // },
+
+          // child: PointerInterceptor(child: widget.content),
         ),
       ),
     );
+    // child: CustomPopup(
+    //   anchorKey: GlobalKey(),
+    //   content: PointerInterceptor(child: widget.content),
+    //   child: Icon(widget.childIcon),
   }
 }

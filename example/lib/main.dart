@@ -49,11 +49,54 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
             IconButton(
                 icon: Icon(Icons.refresh),
                 onPressed: () {
-                  if (kIsWeb) {
-                    controller.reloadWeb();
-                  } else {
-                    controller.editorController!.reload();
-                  }
+                  controller.insertHtml('''
+                  <p></p>
+                  <a href="https://storage.googleapis.com/ijit-public-gcs/example.xlsx" download="example.xlsx" style="text-decoration: none; color: inherit;">
+<div style="
+display: flex;
+align-items: center; /* 세로 중앙 정렬 */
+justify-content: space-between; /* 가로 공간 분배 */
+width: 400px;
+padding: 10px;
+border: 1px solid #bbb;
+border-radius: 5px;
+background-color: #f9f9f9;
+cursor: pointer;
+transition: all 0.3s ease;">
+
+<!-- Leading -->
+<div style="
+display: flex;
+align-items: center;
+justify-content: center;
+width: 50px;
+height: 50px;
+font-size: 30px;">
+&#x1F4C1;&#xFE0E;
+</div>
+
+<!-- Content (Title & Subtitle) -->
+<div style="
+display: flex;
+flex-direction: column; /* 세로 방향 정렬 */
+align-items: flex-start; /* 왼쪽 정렬 */
+margin-left: 10px; /* Leading과 간격 추가 */">
+<div style="font-size: 16px; color: #333;">example.xlsx</div>
+</div>
+
+<!-- Trailing -->
+<div style="
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 12px;
+color: #555;">
+&#x1F4C1;&#xFE0E;
+</div>
+</div>
+</a>
+<p></p>
+''');
                 })
           ],
         ),
@@ -78,7 +121,16 @@ class _HtmlEditorExampleState extends State<HtmlEditorExample> {
                 ),
                 htmlToolbarOptions: HtmlToolbarOptions(
                   toolbarPosition: ToolbarPosition.aboveEditor, //by default
-                  toolbarType: ToolbarType.nativeScrollable, //by default
+                  toolbarType: ToolbarType.nativeGrid, //by default
+                  defaultToolbarButtons: [
+                    FontSettingButtons(fontSizeUnit: false),
+                    FontButtons(superscript: false, subscript: false),
+                    StyleButtons(),
+                    ColorButtons(),
+                    // ParagraphButtons(),
+                    // OtherButtons(),
+                    // InsertButtons(otherFile: true)
+                  ],
                   onButtonPressed:
                       (ButtonType type, bool? status, Function? updateStatus) {
                     print(

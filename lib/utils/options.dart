@@ -136,7 +136,7 @@ class HtmlToolbarOptions {
       // StyleButtons(),
       FontSettingButtons(fontName: false, fontSizeUnit: false),
       FontButtons(clearAll: false),
-      ColorButtons(),
+      // ColorButtons(),
       //ListButtons(ul: false, listStyles: false),
       ParagraphButtons(
           increaseIndent: false,
@@ -145,7 +145,7 @@ class HtmlToolbarOptions {
           textDirection: false,
           lineHeight: false,
           caseConverter: false),
-      InsertButtons(audio: false, otherFile: true),
+      InsertButtons(audio: false, otherFile: false),
     ],
     this.otherFileExtensions,
     this.imageExtensions,

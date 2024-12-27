@@ -81,8 +81,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
 
   /// colors that can be chosen
   List<Color> colors = [
+    Color(0xFFFFFFFF), // #FFFFFF -> 서식취소로 변경
     Color(0xFF000000), // #000000
-    Color(0xFF1C1C1C), // #1C1C1C
     Color(0xFF333333), // #333333
     Color(0xFF666666), // #666666
     Color(0xFF9D9D9D), // #9D9D9D
@@ -119,7 +119,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
   ];
 
   /// Sets the selected item for the background color dialog
-  Color _backColorSelected = Colors.yellow;
+  Color _backColorSelected = Colors.black;
 
   /// Sets the selected item for the list style dropdown
   String? _listStyleSelectedItem;
@@ -231,12 +231,14 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
     }
     if (colorList[1] != null && colorList[1]!.isNotEmpty) {
       setState(mounted, this.setState, () {
+        print(1);
         _backColorSelected =
             Color(int.parse(colorList[1]!, radix: 16) + 0xFF000000);
       });
     } else {
       setState(mounted, this.setState, () {
-        _backColorSelected = Colors.yellow;
+        // print(2);
+        // _backColorSelected = Colors.black;
       });
     }
     //check the list style if it matches one of the predetermined styles and update the toolbar
@@ -531,9 +533,19 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
     });
   }
 
+  void _setColor(String command, Color newColor) {
+    widget.controller.execCommand(command,
+        argument: (newColor.value & 0xFFFFFF)
+            .toRadixString(16)
+            .padLeft(6, '0')
+            .toUpperCase());
+  }
+
   List<Widget> _buildChildren() {
-    TextEditingController foreColorHexController = TextEditingController();
-    TextEditingController backColorHexController = TextEditingController();
+    TextEditingController foreColorHexController =
+        TextEditingController(text: '#${_foreColorSelected.hex}');
+    TextEditingController backColorHexController =
+        TextEditingController(text: '#${_backColorSelected.hex}');
 
     var toolbarChildren = <Widget>[];
     for (var t in widget.htmlToolbarOptions.defaultToolbarButtons) {
@@ -951,7 +963,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
           CustomWidgetWrapper(
             widgets: [
               PopupButton(
-                child: Icon(Icons.format_color_text),
+                child: Icon(Icons.format_color_text, color: _foreColorSelected),
                 content: Container(
                   width: 200,
                   height: 220,
@@ -968,43 +980,68 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                         ),
                         itemCount: colors.length,
                         itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              late Color newColor = colors[index];
-
-                              widget.controller.execCommand('foreColor',
-                                  argument: (newColor.value & 0xFFFFFF)
-                                      .toRadixString(16)
-                                      .padLeft(6, '0')
-                                      .toUpperCase());
-                              setState(mounted, this.setState, () {
-                                _foreColorSelected = newColor;
-                                // print(_foreColorSelected.toString());
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Container(
-                              child: (_foreColorSelected == colors[index])
-                                  ? (Icon(
-                                      Icons.check,
-                                      size: 17.5,
+                          if (index == 0) {
+                            return GestureDetector(
+                              child: Container(
+                                child: Icon(Icons.dnd_forwardslash_sharp,
+                                    color: Colors.black),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
                                       color: (colors[index] == Colors.white)
                                           ? Colors.black
-                                          : Colors.white,
-                                    ))
-                                  : (null),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: (colors[index] == Colors.white)
-                                        ? Colors.black
-                                        : colors[index], // Border color
-                                    width: 0.5 // Border width
-                                    ),
-                                shape: BoxShape.circle,
-                                color: colors[index],
+                                          : colors[index], // Border color
+                                      width: 0.001 // Border width
+                                      ),
+                                  shape: BoxShape.circle,
+                                  color: colors[index],
+                                ),
+                                clipBehavior: Clip.hardEdge,
                               ),
-                            ),
-                          );
+                              onTap: () {
+                                setState(mounted, this.setState, () {
+                                  _foreColorSelected = Colors.black;
+                                });
+
+                                _setColor('foreColor', Colors.black);
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          } else {
+                            return GestureDetector(
+                              onTap: () {
+                                late Color newColor = colors[index];
+
+                                _setColor('foreColor', newColor);
+
+                                setState(mounted, this.setState, () {
+                                  _foreColorSelected = newColor;
+                                  // print(_foreColorSelected.toString());
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: Container(
+                                child: (_foreColorSelected == colors[index])
+                                    ? (Icon(
+                                        Icons.check,
+                                        size: 17.5,
+                                        color: (colors[index] == Colors.white)
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ))
+                                    : (null),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: (colors[index] == Colors.white)
+                                          ? Colors.black
+                                          : colors[index], // Border color
+                                      width: 0.5 // Border width
+                                      ),
+                                  shape: BoxShape.circle,
+                                  color: colors[index],
+                                ),
+                              ),
+                            );
+                          }
                         },
                       ),
                       SizedBox(height: 5.0),
@@ -1017,7 +1054,6 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                               controller: foreColorHexController,
                               decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.colorize_sharp),
-                                  hintText: '#ffffff',
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none),
                             ),
@@ -1034,16 +1070,11 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                                   if (foreColorHexController.text !=
                                           "#000000" &&
                                       newColor == Colors.black) {
-                                    throw ('should input HEX Value like #ffeeff');
+                                    throw ('should input HEX Range rValue like #ffeeff');
                                   }
 
-                                  debugPrint(newColor.toString());
+                                  _setColor('foreColor', newColor);
 
-                                  widget.controller.execCommand('foreColor',
-                                      argument: (newColor.value & 0xFFFFFF)
-                                          .toRadixString(16)
-                                          .padLeft(6, '0')
-                                          .toUpperCase());
                                   setState(mounted, this.setState, () {
                                     _foreColorSelected = newColor;
                                     Navigator.pop(context);
@@ -1064,7 +1095,7 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 ),
               ),
               PopupButton(
-                child: Icon(Icons.format_color_fill),
+                child: Icon(Icons.format_color_fill, color: _backColorSelected),
                 content: Container(
                   color: Colors.white,
                   width: 200,
@@ -1082,42 +1113,67 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                         ),
                         itemCount: colors.length,
                         itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              late Color newColor = colors[index];
-
-                              widget.controller.execCommand('hiliteColor',
-                                  argument: (newColor.value & 0xFFFFFF)
-                                      .toRadixString(16)
-                                      .padLeft(6, '0')
-                                      .toUpperCase());
-                              setState(mounted, this.setState, () {
-                                _backColorSelected = newColor;
-                                Navigator.pop(context);
-                              });
-                            },
-                            child: Container(
-                              child: (_backColorSelected == colors[index])
-                                  ? (Icon(
-                                      Icons.check,
-                                      size: 17.5,
+                          if (index == 0) {
+                            return GestureDetector(
+                              child: Container(
+                                child: Icon(Icons.dnd_forwardslash_sharp,
+                                    color: Colors.black),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
                                       color: (colors[index] == Colors.white)
                                           ? Colors.black
-                                          : Colors.white,
-                                    ))
-                                  : (null),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: (colors[index] == Colors.white)
-                                        ? Colors.black
-                                        : colors[index], // Border color
-                                    width: 0.5 // Border width
-                                    ),
-                                shape: BoxShape.circle,
-                                color: colors[index],
+                                          : colors[index], // Border color
+                                      width: 0.001 // Border width
+                                      ),
+                                  shape: BoxShape.circle,
+                                  color: colors[index],
+                                ),
+                                clipBehavior: Clip.hardEdge,
                               ),
-                            ),
-                          );
+                              onTap: () {
+                                setState(mounted, this.setState, () {
+                                  _backColorSelected = Colors.black;
+                                });
+
+                                widget.controller.execCommand('hiliteColor',
+                                    argument: 'initial');
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          } else {
+                            return GestureDetector(
+                              child: Container(
+                                child: (_backColorSelected == colors[index])
+                                    ? (Icon(
+                                        Icons.check,
+                                        size: 17.5,
+                                        color: (colors[index] == Colors.white)
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ))
+                                    : (null),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: (colors[index] == Colors.white)
+                                          ? Colors.black
+                                          : colors[index], // Border color
+                                      width: 0.5 // Border width
+                                      ),
+                                  shape: BoxShape.circle,
+                                  color: colors[index],
+                                ),
+                              ),
+                              onTap: () {
+                                late Color newColor = colors[index];
+
+                                _setColor('hiliteColor', newColor);
+                                setState(mounted, this.setState, () {
+                                  _backColorSelected = newColor;
+                                  Navigator.pop(context);
+                                });
+                              },
+                            );
+                          }
                         },
                       ),
                       SizedBox(height: 5.0),
@@ -1127,14 +1183,38 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: backColorHexController,
                               decoration: InputDecoration(
                                   prefixIcon: Icon(Icons.color_lens),
-                                  hintText: '#006DD7',
                                   enabledBorder: InputBorder.none,
                                   focusedBorder: InputBorder.none),
                             ),
                           ),
-                          TextButton(onPressed: () {}, child: Text('입력')),
+                          TextButton(
+                              onPressed: () {
+                                try {
+                                  if (backColorHexController.text.length != 7)
+                                    throw ('should input format like #ffeeff');
+
+                                  Color newColor =
+                                      backColorHexController.text.toColor;
+
+                                  if (backColorHexController.text !=
+                                          "#000000" &&
+                                      newColor == Colors.black) {
+                                    throw ('should input HEX Range Value like #ffeeff');
+                                  }
+
+                                  _setColor('hiliteColor', newColor);
+                                  setState(mounted, this.setState, () {
+                                    _backColorSelected = newColor;
+                                    Navigator.pop(context);
+                                  });
+                                } catch (err) {
+                                  debugPrint(err.toString());
+                                }
+                              },
+                              child: Text('입력')),
                         ],
                       ),
                     ],
